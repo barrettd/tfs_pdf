@@ -17,7 +17,9 @@
 
 namespace tfs {
 
+
 class TFSPdfDocument {
+    friend class TFSPdfWriter;     // Forward declaration
 private:
     std::vector<std::unique_ptr<TFSPdfPage>> m_pages;
     std::vector<TFSPdfFont>                  m_observedFonts;   // Document level observed fonts.  There is a similar one for each page.
@@ -28,6 +30,14 @@ private:
     long        m_height;
     double      m_lineWidth;
     TFSPdfDate  m_creationDate;
+
+private:    // Methods for class TFSPdfWriter:
+    const TFSPdfDate &getCreationDate( void ) const;
+
+    std::vector<std::unique_ptr<TFSPdfPage>>::const_iterator begin( void ) const;
+    std::vector<std::unique_ptr<TFSPdfPage>>::const_iterator end( void ) const;
+    
+    const std::vector<TFSPdfFont>& getObservedFonts( void ) const;
 
 private:
     void recordFont( TFSPdfFont font );
@@ -41,22 +51,16 @@ public:
     long width( void ) const;
     long height( void ) const;
     
-    bool setLineWidth( double width );
+    bool   setLineWidth( double width );
     double getLineWidth( void ) const;
     
     bool setCreationDate( int year, int month, int day, int hour = 0, int minute = 0, int second = 0 );     // Optional
-    const TFSPdfDate &getCreationDate( void ) const;
     
     bool newPage( void );
     std::size_t pageCount( void ) const;
     
-    std::vector<std::unique_ptr<TFSPdfPage>>::const_iterator begin( void ) const;
-    std::vector<std::unique_ptr<TFSPdfPage>>::const_iterator end( void ) const;
-    
-    const std::vector<TFSPdfFont>& getObservedFonts( void ) const;
-
-    TFSPdfFont setFont( TFSPdfFont font );     // Returns previous font.
-    TFSPdfFont setFont( TFSPdfFontFamily fontFamily, bool bold = false, bool italic = false );
+    TFSPdfFont  setFont( TFSPdfFont font );     // Returns previous font.
+    TFSPdfFont  setFont( TFSPdfFontFamily fontFamily, bool bold = false, bool italic = false );
     std::size_t setFontSize( std::size_t size );
 
     bool setLine( double x1, double y1, double x2, double y2 );

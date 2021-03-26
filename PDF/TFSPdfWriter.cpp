@@ -10,7 +10,7 @@
 
 namespace tfs {
 
-static const char VERSION[] = { "1.00" };
+static const char VERSION[] = { "1.01" };
 
 TFSPdfWriter::TFSPdfWriter( const std::string &path ):
 m_fontMap(),
