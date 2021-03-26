@@ -40,7 +40,7 @@ TFSPdfFont TFSPdfPage::setFont( TFSPdfFont font ) {
 }
 
 bool TFSPdfPage::empty( void ) const {
-    return texts.empty() && lines.empty() && boxes.empty();
+    return texts.empty() && lines.empty() && circles.empty() && boxes.empty();
 }
 
 std::size_t TFSPdfPage::getPageNumber( void ) const {
