@@ -1,0 +1,70 @@
+%PDF-1.4
+%¥±ëáœñø
+1 0 obj << /Type /Font /Subtype /Type1 /Name /F1 /BaseFont /Helvetica >>
+endobj
+
+2 0 obj << /Type /Font /Subtype /Type1 /Name /F2 /BaseFont /Courier >>
+endobj
+
+3 0 obj << /Type /Catalog /Pages 4 0 R >>
+endobj
+
+4 0 obj << /Type /Pages
+/Kids [5 0 R]
+/Count 1
+>>
+endobj
+
+5 0 obj
+<< /Type /Page
+/Parent 4 0 R
+/Resources << /Font << /F1 1 0 R /F2 2 0 R >> >>
+/Contents 6 0 R
+/MediaBox [0 0 612 792]
+>>
+endobj
+
+6 0 obj
+<< /Length 955 >>
+stream
+2 w 200 200 300 50 re s
+200 260 300 25 re q 0.9 g f Q
+200 260 300 25 re s
+450 620 m 461.046 620 470 611.046 470 600 c 470 588.954 461.046 580 450 580 c 438.954 580 430 588.954 430 600 c 430 611.046 438.954 620 450 620 c s
+450 600 m 505.228 600 550 555.228 550 500 c 550 444.772 505.228 400 450 400 c 394.772 400 350 444.772 350 500 c 350 555.228 394.772 600 450 600 c q 0.95 g f Q
+450 600 m 505.228 600 550 555.228 550 500 c 550 444.772 505.228 400 450 400 c 394.772 400 350 444.772 350 500 c 350 555.228 394.772 600 450 600 c s
+1 w 100 100 m 300 300 l s
+20 w 100 100 m 100 300 l s
+BT /F1 12 Tf 31 700 Td (Hello there, this should be in Helvetica, 12 point) Tj ET
+BT /F1 12 Tf 31 680 Td (Text line two) Tj ET
+BT /F1 12 Tf 31 660 Td (Text line three) Tj ET
+BT /F2 12 Tf 31 640 Td (This should be in Courier, 12 point) Tj ET
+BT /F2 18 Tf 31 620 Td (This should be in Courier, 18 point) Tj ET
+BT /F2 6 Tf 31 600 Td (This should be in Courier, 6 point) Tj ET
+endstream
+endobj
+
+7 0 obj << /Creator (TFSPdfWriter, Version 1.00)
+/Producer (Tree Frog Software, http://www.thefrog.com)
+/CreationDate (D:20210325000000)
+>>
+endobj
+
+xref
+0 8
+0000000000 65535 f 
+0000000025 00000 n 
+0000000106 00000 n 
+0000000185 00000 n 
+0000000235 00000 n 
+0000000293 00000 n 
+0000000430 00000 n 
+0000001436 00000 n 
+trailer
+<< /Root 3 0 R
+/Size 8
+/Info 7 0 R
+>>
+startxref
+1584
+%%EOF
