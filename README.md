@@ -3,7 +3,7 @@ Simple, quick PDF writer.
 
 Not full featured, but sufficient for generating forms and text documents.
 
-Supports boxes (hollow and filled), circles (hollow and filled), lines, polylines, text.
+Supports boxes (hollow and filled), circles (hollow and filled), lines, polylines and text.
 
 Supported fonts include: Times, Courier, Helvetica, Symbol and ZapfDingbats.
 
