@@ -12,10 +12,8 @@ namespace tfs {
 
 TFSPdfPage::TFSPdfPage( TFSPdfFont currentFont, std::size_t pageNumber ):
 observedFonts(),
-lines(),
-circles(),
-boxes(),
-texts(),
+m_objects(),
+m_texts(),
 m_currentFont( currentFont ),
 m_pageNumber( pageNumber ),
 m_objectIndex( 0 ),
@@ -40,7 +38,18 @@ TFSPdfFont TFSPdfPage::setFont( TFSPdfFont font ) {
 }
 
 bool TFSPdfPage::empty( void ) const {
-    return texts.empty() && lines.empty() && circles.empty() && boxes.empty();
+    return m_objects.empty();
+}
+
+std::vector<std::unique_ptr<TFSPdfStreamable>>::const_iterator TFSPdfPage::begin( void ) const {
+    return m_objects.begin();
+}
+std::vector<std::unique_ptr<TFSPdfStreamable>>::const_iterator TFSPdfPage::end( void ) const {
+    return m_objects.end();
+}
+
+const std::vector<std::unique_ptr<TFSPdfText>>& TFSPdfPage::getTexts( void ) const {
+    return m_texts;
 }
 
 std::size_t TFSPdfPage::getPageNumber( void ) const {
@@ -62,37 +71,83 @@ std::size_t TFSPdfPage::getStreamIndex( void ) const {
 }
 
 bool TFSPdfPage::setLine( double lineWidth, double x1, double y1, double x2, double y2 ) {
-    lines.push_back( std::make_unique<TFSPdfLine>( lineWidth, x1, y1, x2, y2 ));
+    std::unique_ptr<TFSPdfLine> line = std::make_unique<TFSPdfLine>( lineWidth, x1, y1, x2, y2 );
+    if( !line->ok()) {
+        return false;
+    }
+    m_objects.push_back( std::move( line ));
     return true;
 }
 
 bool TFSPdfPage::setPolyline( double lineWidth, const std::vector<std::pair<double,double>> &verticies ) {
-    lines.push_back( std::make_unique<TFSPdfLine>( lineWidth, verticies ));
+    std::unique_ptr<TFSPdfLine> line = std::make_unique<TFSPdfLine>( lineWidth, verticies  );
+    if( !line->ok()) {
+        return false;
+    }
+    m_objects.push_back( std::move( line ));
+    return true;
+}
+
+bool TFSPdfPage::setPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies ) {
+    std::unique_ptr<TFSPdfPolygon> polygon = std::make_unique<TFSPdfPolygon>( lineWidth, verticies );
+    if( !polygon->ok()) {
+        return false;
+    }
+    m_objects.push_back( std::move( polygon ));
+    return true;
+}
+
+bool TFSPdfPage::setPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies, double shading ) {
+    std::unique_ptr<TFSPdfPolygon> polygon = std::make_unique<TFSPdfPolygon>( lineWidth, verticies, shading );
+    if( !polygon->ok()) {
+        return false;
+    }
+    m_objects.push_back( std::move( polygon ));
     return true;
 }
 
 bool TFSPdfPage::setCircle( double lineWidth, double x, double y, double radius ) {
-    circles.push_back( std::make_unique<TFSPdfCircle>( lineWidth, x, y, radius ));
+    std::unique_ptr<TFSPdfCircle> circle = std::make_unique<TFSPdfCircle>( lineWidth, x, y, radius );
+    if( !circle->ok()) {
+        return false;
+    }
+    m_objects.push_back( std::move( circle ));
     return true;
 }
 
 bool TFSPdfPage::setCircle( double lineWidth, double x, double y, double radius, double shading ) {
-    circles.push_back( std::make_unique<TFSPdfCircle>( lineWidth, x, y, radius, shading, true ));
+    std::unique_ptr<TFSPdfCircle> circle = std::make_unique<TFSPdfCircle>( lineWidth, x, y, radius, shading, true );
+    if( !circle->ok()) {
+        return false;
+    }
+    m_objects.push_back( std::move( circle ));
     return true;
 }
 
-bool TFSPdfPage::setBox( double lineWidth, long x,  long y,  long width, long height ) {
-    boxes.push_back( std::make_unique<TFSPdfBox>( lineWidth, x, y, width, height ));
+bool TFSPdfPage::setBox( double lineWidth, double x,  double y, double width, double height ) {
+    std::unique_ptr<TFSPdfBox> box = std::make_unique<TFSPdfBox>( lineWidth, x, y, width, height );
+    if( !box->ok()) {
+        return false;
+    }
+    m_objects.push_back( std::move( box ));
     return true;
 }
 
-bool TFSPdfPage::setBox( double lineWidth, long x,  long y,  long width, long height, double shading ) {
-    boxes.push_back( std::make_unique<TFSPdfBox>( lineWidth, x, y, width, height, shading, true ));
+bool TFSPdfPage::setBox( double lineWidth, double x,  double y, double width, double height, double shading ) {
+    std::unique_ptr<TFSPdfBox> box = std::make_unique<TFSPdfBox>( lineWidth, x, y, width, height, shading, true );
+    if( !box->ok()) {
+        return false;
+    }
+    m_objects.push_back( std::move( box ));
     return true;
 }
 
-bool TFSPdfPage::setText( std::size_t fontSize, long x,  long y, const std::string &text ) {
-    texts.push_back( std::make_unique<TFSPdfText>( m_currentFont, fontSize, x, y, text ));
+bool TFSPdfPage::setText( std::size_t fontSize, double x, double y, const std::string &text ) {
+    std::unique_ptr<TFSPdfText> textObject = std::make_unique<TFSPdfText>( m_currentFont, fontSize, x, y, text );
+    if( !textObject->ok()) {
+        return false;
+    }
+    m_texts.push_back( std::move( textObject ));
     return true;
 }
 

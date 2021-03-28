@@ -13,18 +13,21 @@ static constexpr long                MIN_WIDTH = 72;
 static constexpr long               MIN_HEIGHT = 72;
 static constexpr std::size_t DEFAULT_FONT_SIZE = 12;
 
-TFSPdfDocument::TFSPdfDocument( long width, long height ):
+TFSPdfDocument::TFSPdfDocument( long width, long height, TFSPdfFont font ):
 m_pages(),
 m_observedFonts(),
 m_currentPage( nullptr ),
-m_currentFont( TFSPdfFont::DEFAULT ),
+m_currentFont( font ),
 m_fontSize( DEFAULT_FONT_SIZE ),
 m_width(  width ),
 m_height( height ),
 m_lineWidth( LINE_WIDTH_DEFAULT ),
 m_creationDate() {
-    setFont( TFSPdfFont::DEFAULT );
+    setFont( font );
     newPage();          // Start out with one blank page.
+}
+
+TFSPdfDocument::~TFSPdfDocument( void ) {
 }
 
 bool TFSPdfDocument::ok( void ) const {
@@ -132,6 +135,14 @@ bool TFSPdfDocument::setPolyline( const std::vector<std::pair<double,double>> &v
     return m_currentPage->setPolyline( m_lineWidth, verticies );
 }
 
+bool TFSPdfDocument::setPolygon( const std::vector<std::pair<double,double>> &verticies ) {
+    return m_currentPage->setPolygon( m_lineWidth, verticies );
+}
+
+bool TFSPdfDocument::setPolygon( const std::vector<std::pair<double,double>> &verticies, double shading ) {
+    return m_currentPage->setPolygon( m_lineWidth, verticies, shading );
+}
+
 bool TFSPdfDocument::setCircle( double x, double y, double radius ) {    // Center (x,y) and radius
     return m_currentPage->setCircle( m_lineWidth, x, y, radius );
 }
@@ -140,22 +151,22 @@ bool TFSPdfDocument::setCircle( double x, double y, double radius, double shadin
     return m_currentPage->setCircle( m_lineWidth, x, y, radius, shading );
 }
 
-bool TFSPdfDocument::setBox( long x, long y,  long width, long height ) {
+bool TFSPdfDocument::setBox( double x, double y, double width, double height ) {
     return m_currentPage->setBox( m_lineWidth, x, y, width, height );
 }
 
-bool TFSPdfDocument::setBox( long x, long y,  long width, long height, double shading ) {
+bool TFSPdfDocument::setBox( double x, double y, double width, double height, double shading ) {
     return m_currentPage->setBox( m_lineWidth, x, y, width, height, shading );
 }
 
-bool TFSPdfDocument::setText( long x, long y, const std::string &text ) {
+bool TFSPdfDocument::setText( double x, double y, const std::string &text ) {
     if( text.empty()) {
         return false;
     }
     return m_currentPage->setText( m_fontSize, x, y, text );
 }
 
-bool TFSPdfDocument::setText( long x,  long y, const char *text ) {
+bool TFSPdfDocument::setText( double x, double y, const char *text ) {
     if( text == nullptr || *text == 0 ) {
         return false;
     }

@@ -8,42 +8,49 @@
 
 namespace tfs {
 
-TFSPdfLine::TFSPdfLine( double width, double x1, double y1, double x2, double y2 ):
-verticies(),
-lineWidth( width ) {
-    setLine( x1, y1, x2, y2 );
+TFSPdfLine::TFSPdfLine( double lineWidth, double x1, double y1, double x2, double y2 ):
+TFSPdfStreamable( 0.0, 0.0, lineWidth ),
+m_verticies() {
+    std::pair<double,double> aa( x1, y1 );
+    std::pair<double,double> bb( x2, y2 );
+    m_verticies.push_back( aa );
+    m_verticies.push_back( bb );
 }
 
-TFSPdfLine::TFSPdfLine( double width, const std::vector<std::pair<double,double>> &verts ):
-verticies( verts ),
-lineWidth( width ) {
+TFSPdfLine::TFSPdfLine( double lineWidth, const std::vector<std::pair<double,double>> &verts ):
+TFSPdfStreamable( 0.0, 0.0, lineWidth ),
+m_verticies( verts ) {
+}
+
+TFSPdfLine::~TFSPdfLine( void ) {
 }
 
 bool TFSPdfLine::empty( void ) const {
-    return verticies.empty();
+    return m_verticies.empty();
 }
 
-bool TFSPdfLine::setLineWidth( double width ) {
-    if( width < LINE_WIDTH_MIN || width > LINE_WIDTH_MAX ) {
-        return false;
+bool TFSPdfLine::ok( void ) const {
+    return m_lineWidth > 0.0 && !m_verticies.empty();
+}
+
+void TFSPdfLine::stream( TFSPdfStream &stream ) const {
+    if( !ok()) {
+        return;
     }
-    lineWidth = width;
-    return true;
+    stream.setLineWidth( m_lineWidth );
+    bool first = true;
+    for( const std::pair<double,double> &pair : m_verticies ) {
+        stream << pair.first << pair.second;
+        if( first ) {
+            stream << "m ";    // Move to x,y
+            first = false;
+        } else {
+            stream << "l ";    // Line to x,y
+        }
+    }
+    stream << "s\n";            // Stroke
+    return;
 }
-
-bool TFSPdfLine::setLine( double x1, double y1, double x2, double y2 ) {
-    std::pair<double,double> aa( x1, y1 );
-    std::pair<double,double> bb( x2, y2 );
-    verticies.push_back( aa );
-    verticies.push_back( bb );
-    return true;
-}
-
-bool TFSPdfLine::setPolyline( const std::vector<std::pair<double,double>> &verts ) {
-    verticies = verts;
-    return !verticies.empty();
-}
-
 
 
 }   // namespace tfs

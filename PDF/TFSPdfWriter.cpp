@@ -4,13 +4,12 @@
 //  Created by Barrett Davis on 3/20/21.
 //  Copyright (c) 2021 Tree Frog Software, All Rights Reserved.
 // ---------------------------------------------------------------------------------
-#include <iomanip>
-#include <sstream>
+#include "TFSPdfStream.hpp"
 #include "TFSPdfWriter.hpp"
 
 namespace tfs {
 
-static const char VERSION[] = { "1.01" };
+static const char VERSION[] = { "1.10" };
 
 TFSPdfWriter::TFSPdfWriter( const std::string &path ):
 m_fontMap(),
@@ -19,8 +18,7 @@ m_objPositions( 1, 0 ),     // Store 0 as the first position.
 m_rootIndex( 0 ),
 m_pageCatalogIndex( 0 ),
 m_infoIndex( 0 ),
-m_xrefPosition( 0 ),
-m_lineWidth( 0.0 ) {
+m_xrefPosition( 0 ) {
 }
 
 TFSPdfWriter::operator bool( void ) const {
@@ -146,190 +144,22 @@ bool TFSPdfWriter::writePageDictionary( const TFSPdfDocument &document, const st
     return true;
 }
 
-static void saveGraphicsState( std::ostream &stream ) {
-    stream << " q";         // Push graphics state.
-}
-
-static void restoreGraphicsState( std::ostream &stream ) {
-    stream << " Q";         // Pop graphics state
-}
-
-void TFSPdfWriter::streamLineWidth( std::ostream &stream, double width ) {
-    if( m_lineWidth != width ) {
-        stream << width << " w ";
-        m_lineWidth = width;
-    }
-}
-
-void TFSPdfWriter::streamLine( std::ostream &stream, const std::unique_ptr<TFSPdfLine> &line ) {
-    if( line->empty()) {
-        return;
-    }
-    streamLineWidth( stream, line->lineWidth );
-    bool first = true;
-    for( const std::pair<double,double> &pair : line->verticies ) {
-        stream << pair.first << " " << pair.second;
-        if( first ) {
-            stream << " m ";    // Move to x,y
-            first = false;
-        } else {
-            stream << " l ";    // Line to x,y
-        }
-    }
-    stream << "s\n";
-    return;
-}
-
-void TFSPdfWriter::streamPageLines( std::ostream &stream, const std::unique_ptr<TFSPdfPage> &page ) {
-    if( !stream ) {
-        return;
-    }
-    for( const std::unique_ptr<TFSPdfLine> &line : page->lines ) {
-        streamLine( stream, line );
-    }
-    return;
-}
-
-static void fillOrStroke( std::ostream &stream, bool hasShading, double shadeValue ) {
-    if( hasShading ) {
-        saveGraphicsState( stream );
-        stream << " " << shadeValue << " g f";    // Set greyscale color, then fill.
-        restoreGraphicsState( stream );
-    } else {
-        stream << " s";    // Stroke
-    }
-    stream << "\n";
-    return;
-}
-
-void TFSPdfWriter::streamCircle( std::ostream &stream, const std::unique_ptr<TFSPdfCircle> &circle ) {
-    // https://stackoverflow.com/questions/1734745/how-to-create-circle-with-bézier-curves
-    // Calculate end points and control points for the 4 Bézier curves
-    // Remember that the X coordinates increase to the left and Y coordinates increase upwards.
-    if( !circle->ok()) {
-        return;
-    }
-    const double x = circle->x;     // x,y == center
-    const double y = circle->y;
-    const double r = circle->radius;
-    // End points:
-    std::pair<double,double> top(    x,     y + r );    // 12 o' clock
-    std::pair<double,double> right(  x + r, y     );    //  3 0' clock
-    std::pair<double,double> bottom( x,     y - r );    //  6 o' clock
-    std::pair<double,double> left(   x - r, y     );    //  9 o' clock
-
-    streamLineWidth( stream, circle->lineWidth );
-    // Construct 4 Béziers, clockwise from the top, each with 2 endpoints and 2 control points.
-    constexpr double c = 0.552284749831;   // (4/3)*tan(pi/8) = 4*(sqrt(2)-1)/3 = 0.552284749831;
-    const double cr = c * r;
-    stream <<     top.first       << " " <<    top.second       << " m ";   // Move to the start position.
-    stream <<    (top.first + cr) << " " <<    top.second       << " ";     // Control point
-    stream <<   right.first       << " " << (right.second + cr) << " ";     // Control point
-    stream <<   right.first       << " " <<  right.second       << " c ";   // End position.
-    
-    stream <<  right.first        << " " << (right.second - cr) << " ";     // Control point
-    stream << (bottom.first + cr) << " " << bottom.second       << " ";     // Control point
-    stream <<  bottom.first       << " " << bottom.second       << " c ";   // End position.
-    
-    stream << (bottom.first - cr) << " " << bottom.second       << " ";     // Control point.
-    stream <<    left.first       << " " <<  (left.second - cr) << " ";     // Control point.
-    stream <<    left.first       << " " <<   left.second       << " c ";   // End position.
-    
-    stream <<    left.first       << " " <<  (left.second + cr) << " ";     // Control point.
-    stream <<    (top.first - cr) << " " <<    top.second       << " ";     // Control point.
-    stream <<     top.first       << " " <<    top.second       << " c";    // End position.
-    
-    fillOrStroke( stream, circle->hasShading, circle->shading );
-    return;
-}
-
-void TFSPdfWriter::streamPageCircles( std::ostream &stream, const std::unique_ptr<TFSPdfPage> &page ) {
-    if( !stream ) {
-        return;   // No drawing occurred.
-    }
-    for( const std::unique_ptr<TFSPdfCircle> &circle : page->circles ) {
-        streamCircle( stream, circle );
-    }
-    return;
-}
-
-void TFSPdfWriter::streamBox( std::ostream &stream, const std::unique_ptr<TFSPdfBox> &box ) {
-    if( !box->ok()) {
-        return;
-    }
-    streamLineWidth( stream, box->lineWidth );
-    stream << box->x << " " << box->y << " " << box->width << " " << box->height << " re";     // x,y w,h Rectangle
-    fillOrStroke( stream, box->hasShading, box->shading );
-    return;
-}
-
-void TFSPdfWriter::streamPageBoxes( std::ostream &stream, const std::unique_ptr<TFSPdfPage> &page ) {
-    if( !stream ) {
-        return;   // No drawing occurred.
-    }
-    for( const std::unique_ptr<TFSPdfBox> &box : page->boxes ) {
-        streamBox( stream, box );
-    }
-    return;
-}
-
-static void escapeText( std::string &dst, const std::string &src ) {
-    // Sequence | Meaning
-    // ---------------------------------------------
-    // \n       | LINE FEED (0Ah) (LF)
-    // \r       | CARRIAGE RETURN (0Dh) (CR)
-    // \t       | HORIZONTAL TAB (09h) (HT)
-    // \b       | BACKSPACE (08h) (BS)
-    // \f       | FORM FEED (FF)
-    // \(       | LEFT PARENTHESIS (28h)
-    // \)       | RIGHT PARENTHESIS (29h)
-    // \\       | REVERSE SOLIDUS (5Ch) (Backslash)
-    // \ddd     | Character code ddd (octal)
-    for( const char ch : src ) {
-        if( ch == '(' ) {
-            dst.append( "\\(" );
-        } else if( ch == ')' ) {
-            dst.append( "\\)" );
-        } else if( ch == '\\' ) {
-            dst.append( "\\\\" );
-        } else {
-            dst.push_back( ch );
-        }
-    }
-    return;
-}
-
-void TFSPdfWriter::streamPageText( std::ostream &stream, const std::unique_ptr<TFSPdfPage> &page ) {
-    if( !m_stream ) {
-        return;
-    }
-    for( const std::unique_ptr<TFSPdfText> &text : page->texts ) {
-        std::string escaped;
-        escapeText( escaped, text->text );
-        const TFSPdfFontMapNode *node = m_fontMap.getNode( text->font );
-        stream << "BT ";                                                        // Begin Text object
-        stream << "/" << node->shortName << " " << text->fontSize << " Tf ";    // Use F1 font at 18 point size
-        stream << text->x << " " << text->y << " Td ";                          // Position the text at x,y
-        stream << "(" << escaped << ") Tj ";                                    // Show text
-        stream << "ET\n";                                                       // End Text
-    }
-    return;
-}
-
 bool TFSPdfWriter::writePageContents( const std::unique_ptr<TFSPdfPage> &page ) {
     if( !m_stream ) {
         return false;
     }
-    m_lineWidth = 0.0;                                  // Reset the line width for each new page.
     const std::size_t streamIndex = page->getStreamIndex();
     m_objPositions[streamIndex] = m_stream.tellp();     // Go back and fill in current position.
     m_stream << streamIndex << " 0 obj\n";              // Object 3, Generation 0
 
-    std::stringstream stream;
-    streamPageBoxes(   stream, page );
-    streamPageCircles( stream, page );
-    streamPageLines(   stream, page );
-    streamPageText(    stream, page );
+    TFSPdfStream stream;
+    for( const std::unique_ptr<TFSPdfStreamable> &object : *page ) {
+        stream << *object;
+    }
+    const std::vector<std::unique_ptr<TFSPdfText>> &texts = page->getTexts();
+    for( const std::unique_ptr<TFSPdfText> &text : texts ) {
+        text->stream( stream, m_fontMap );
+    }
     const std::string payload     = stream.str();
     const std::size_t payloadSize = payload.size();
 

@@ -8,18 +8,27 @@
 
 namespace tfs {
 
-TFSPdfBox::TFSPdfBox( double strokeWidth, long x, long y, long width, long height, double shadingValue, bool hasShading ):
-x( x ),
-y( y ),
-width( width ),
-height( height ),
-lineWidth( strokeWidth ),
-shading( shadingValue ),
-hasShading( hasShading ){
+TFSPdfBox::TFSPdfBox( double strokeWidth, double x, double y, double width, double height, double shadingValue, bool hasShading ):
+TFSPdfStreamable( x, y, strokeWidth, shadingValue, hasShading ),
+m_width( width ),
+m_height( height ) {
+}
+
+TFSPdfBox::~TFSPdfBox( void ) {
 }
 
 bool TFSPdfBox::ok( void ) const {
-    return x >= 0.0 && y >= 0.0 && width > 0.0 && height > 0.0 && lineWidth > 0.0 && shading >= 0.0 && shading <= 1.0;
+    return TFSPdfStreamable::ok() && m_width > 0.0 && m_height > 0.0;
+}
+
+void TFSPdfBox::stream( TFSPdfStream &stream ) const {
+    if( !ok()) {
+        return;
+    }
+    stream.setLineWidth( m_lineWidth );
+    stream << m_x << m_y << m_width << m_height << "re\n";     // x,y w,h Rectangle
+    stream.fillOrStroke( m_hasShading, m_shading );
+    return;
 }
 
 

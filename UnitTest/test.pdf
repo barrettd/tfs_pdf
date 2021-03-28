@@ -27,14 +27,24 @@ endobj
 6 0 obj
 << /Length 955 >>
 stream
-2 w 200 200 300 50 re s
-200 260 300 25 re q 0.9 g f Q
-200 260 300 25 re s
+1 w
+100 100 m 300 300 l s
+20 w
+100 100 m 100 300 l s
+2 w
+200 200 300 50 re
+s
+200 260 300 25 re
+q
+0.9 g f
+Q
+200 260 300 25 re
+s
 450 620 m 461.046 620 470 611.046 470 600 c 470 588.954 461.046 580 450 580 c 438.954 580 430 588.954 430 600 c 430 611.046 438.954 620 450 620 c s
-450 600 m 505.228 600 550 555.228 550 500 c 550 444.772 505.228 400 450 400 c 394.772 400 350 444.772 350 500 c 350 555.228 394.772 600 450 600 c q 0.95 g f Q
+450 600 m 505.228 600 550 555.228 550 500 c 550 444.772 505.228 400 450 400 c 394.772 400 350 444.772 350 500 c 350 555.228 394.772 600 450 600 c q
+0.95 g f
+Q
 450 600 m 505.228 600 550 555.228 550 500 c 550 444.772 505.228 400 450 400 c 394.772 400 350 444.772 350 500 c 350 555.228 394.772 600 450 600 c s
-1 w 100 100 m 300 300 l s
-20 w 100 100 m 100 300 l s
 BT /F1 12 Tf 31 700 Td (Hello there, this should be in Helvetica, 12 point) Tj ET
 BT /F1 12 Tf 31 680 Td (Text line two) Tj ET
 BT /F1 12 Tf 31 660 Td (Text line three) Tj ET
@@ -44,7 +54,7 @@ BT /F2 6 Tf 31 600 Td (This should be in Courier, 6 point) Tj ET
 endstream
 endobj
 
-7 0 obj << /Creator (TFSPdfWriter, Version 1.00)
+7 0 obj << /Creator (TFSPdfWriter, Version 1.10)
 /Producer (Tree Frog Software, http://www.thefrog.com)
 /CreationDate (D:20210325000000)
 >>

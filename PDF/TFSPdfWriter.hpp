@@ -24,7 +24,6 @@ private:
     std::size_t       m_pageCatalogIndex;
     std::size_t       m_infoIndex;
     std::streamoff    m_xrefPosition;
-    double            m_lineWidth;
     
 private:
     std::size_t getNextObjectIndex( void );
@@ -38,21 +37,7 @@ private:
     bool writePagesDictionary( const TFSPdfDocument &document );
     void emitFontDictionary( const std::unique_ptr<TFSPdfPage> &page );
     bool writePageDictionary( const TFSPdfDocument &document, const std::unique_ptr<TFSPdfPage> &page );
-    
-    void streamLineWidth( std::ostream &stream, double width );
-
-    void streamLine(      std::ostream &stream, const std::unique_ptr<TFSPdfLine> &line );
-    void streamPageLines( std::ostream &stream, const std::unique_ptr<TFSPdfPage> &page );
-
-    void streamCircle(      std::ostream &stream, const std::unique_ptr<TFSPdfCircle> &circle );
-    void streamPageCircles( std::ostream &stream, const std::unique_ptr<TFSPdfPage>   &page );
-
-    void streamBox(       std::ostream &stream, const std::unique_ptr<TFSPdfBox>  &box );
-    void streamPageBoxes( std::ostream &stream, const std::unique_ptr<TFSPdfPage> &page );
-
-    void streamPageText(  std::ostream &stream, const std::unique_ptr<TFSPdfPage> &page );
-
-    bool writePageContents(const std::unique_ptr<TFSPdfPage> &page );
+    bool writePageContents(  const std::unique_ptr<TFSPdfPage> &page );
     bool writeInfoDictionary( const TFSPdfDocument &document );
     bool writeCrossReference( void );
     bool writeTrailer( void );

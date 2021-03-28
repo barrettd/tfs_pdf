@@ -12,6 +12,7 @@
 #include "TFSPdfBox.hpp"
 #include "TFSPdfCircle.hpp"
 #include "TFSPdfLine.hpp"
+#include "TFSPdfPolygon.hpp"
 #include "TFSPdfText.hpp"
 
 
@@ -19,16 +20,14 @@ namespace tfs {
 
 class TFSPdfPage {
 public:
-    std::vector<TFSPdfFont>              observedFonts;   // Page level observed fonts.
-    std::vector<std::unique_ptr<TFSPdfLine>>     lines;
-    std::vector<std::unique_ptr<TFSPdfCircle>> circles;
-    std::vector<std::unique_ptr<TFSPdfBox>>      boxes;
-    std::vector<std::unique_ptr<TFSPdfText>>     texts;
+    std::vector<TFSPdfFont> observedFonts;   // Page level observed fonts.
 private:
-    TFSPdfFont                               m_currentFont;
-    std::size_t                              m_pageNumber;
-    std::size_t                              m_objectIndex;
-    std::size_t                              m_streamIndex;
+    std::vector<std::unique_ptr<TFSPdfStreamable>> m_objects;
+    std::vector<std::unique_ptr<TFSPdfText>>       m_texts;
+    TFSPdfFont      m_currentFont;
+    std::size_t     m_pageNumber;
+    std::size_t     m_objectIndex;
+    std::size_t     m_streamIndex;
 
 private:
     void recordFont( TFSPdfFont font );
@@ -40,6 +39,11 @@ public:
     
     bool empty( void ) const;
     
+    std::vector<std::unique_ptr<TFSPdfStreamable>>::const_iterator begin( void ) const;
+    std::vector<std::unique_ptr<TFSPdfStreamable>>::const_iterator end(   void ) const;
+
+    const std::vector<std::unique_ptr<TFSPdfText>> &getTexts( void ) const;
+    
     std::size_t getPageNumber( void ) const;
     
     void        setObjectIndex( std::size_t index );
@@ -47,16 +51,19 @@ public:
     void        setStreamIndex( std::size_t index );
     std::size_t getStreamIndex( void ) const;
 
-    bool setLine( double lineWidth, double x1, double y1, double x2, double y2 );
+    bool setLine(     double lineWidth, double x1, double y1, double x2, double y2 );
     bool setPolyline( double lineWidth, const std::vector<std::pair<double,double>> &verticies );
+
+    bool setPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies );
+    bool setPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies, double shading );
 
     bool setCircle( double lineWidth, double x, double y, double radius );
     bool setCircle( double lineWidth, double x, double y, double radius, double shading );
 
-    bool setBox( double lineWidth, long x,  long y,  long width, long height );
-    bool setBox( double lineWidth, long x,  long y,  long width, long height, double shading );    // shading [0.0 to 1.0] with 0.0 = black, 1.0 = white
+    bool setBox( double lineWidth, double x,  double y,  double width, double height );
+    bool setBox( double lineWidth, double x,  double y,  double width, double height, double shading );    // shading [0.0 to 1.0] with 0.0 = black, 1.0 = white
 
-    bool setText( std::size_t fontSize, long x,  long y, const std::string &text );
+    bool setText( std::size_t fontSize, double x, double y, const std::string &text );
 
 };
 

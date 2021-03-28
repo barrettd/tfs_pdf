@@ -7,24 +7,27 @@
 #ifndef TFSPdfText_hpp
 #define TFSPdfText_hpp
 
-#include <string>
-#include "TFSPdfFont.hpp"
+#include "TFSPdfFontMap.hpp"
+#include "TFSPdfStreamable.hpp"
 
 namespace tfs {
 
-class TFSPdfText {
-public:
-    TFSPdfFont  font;
-    std::size_t fontSize;
-    long x;
-    long y;
-    std::string text;
+class TFSPdfText : public TFSPdfStreamable {
+protected:
+    TFSPdfFont  m_font;
+    std::size_t m_fontSize;
+    std::string m_text;
     
 public:
-    TFSPdfText( TFSPdfFont font, std::size_t fontSize, long x,  long y, const std::string &text );
+    TFSPdfText( TFSPdfFont font, std::size_t fontSize, double x,  double y, const std::string &text );
+    virtual ~TFSPdfText( void );
     
     bool empty( void ) const;
     std::size_t size( void ) const;
+
+    virtual bool ok( void ) const override;
+    virtual void stream( TFSPdfStream &stream ) const override;     // NOP
+    void stream( TFSPdfStream &stream, const TFSPdfFontMap &fontMap );
 };
 
 }   // namespace tfs

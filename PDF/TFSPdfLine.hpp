@@ -9,26 +9,27 @@
 
 #include <utility>
 #include <vector>
+#include "TFSPdfStreamable.hpp"
 
 namespace tfs {
 
-class TFSPdfLine {
+class TFSPdfLine : public TFSPdfStreamable {
 public:
-    static constexpr double LINE_WIDTH_MIN     = 1.0;
+    static constexpr double LINE_WIDTH_MIN     = 0.1;   // Arbitrary values
     static constexpr double LINE_WIDTH_MAX   = 700.0;
 
-public:
-    std::vector<std::pair<double,double>> verticies;
-    double lineWidth;
+protected:
+    std::vector<std::pair<double,double>> m_verticies;
 public:
     TFSPdfLine( double lineWidth, double x1, double y1, double x2, double y2 );
     TFSPdfLine( double lineWidth, const std::vector<std::pair<double,double>> &verticies );
+    virtual ~TFSPdfLine( void );
 
     bool empty( void ) const;
 
-    bool setLineWidth( double width );
-    bool setLine( double x1, double y1, double x2, double y2 );
-    bool setPolyline( const std::vector<std::pair<double,double>> &verticies );
+    virtual bool ok( void ) const override;    
+
+    virtual void stream( TFSPdfStream &stream ) const override;
 };
 
 

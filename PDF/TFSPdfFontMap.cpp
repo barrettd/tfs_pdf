@@ -38,8 +38,8 @@ TFSPdfFontMapNode* TFSPdfFontMap::addNode( const TFSPdfFont font, const int font
     return ptr;
 }
 
-const TFSPdfFontMapNode* TFSPdfFontMap::getNode( const TFSPdfFont font ) {
-    std::unique_ptr<TFSPdfFontMapNode> &node = m_map[font];
+const TFSPdfFontMapNode* TFSPdfFontMap::getNode( const TFSPdfFont font ) const {
+    const std::unique_ptr<TFSPdfFontMapNode> &node = m_map.at( font );  // Throws an exception if font not found.
     return node.get();
 }
 

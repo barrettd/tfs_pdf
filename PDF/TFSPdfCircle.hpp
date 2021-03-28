@@ -7,20 +7,19 @@
 #ifndef TFSPdfCircle_hpp
 #define TFSPdfCircle_hpp
 
+#include "TFSPdfStreamable.hpp"
+
 namespace tfs {
 
-class TFSPdfCircle {
-public:
-    double x;
-    double y;
-    double radius;
-    double lineWidth;
-    double shading;     // [0.0 to 1.0] with 0.0 = black, 1.0 = white
-    bool   hasShading;
+class TFSPdfCircle : public TFSPdfStreamable {
+protected:
+    double m_radius;
 public:
     TFSPdfCircle( double lineWidth, double x, double y, double radius, double shading = 0.0, bool hasShading = false );
+    virtual ~TFSPdfCircle( void );
     
-    bool ok( void ) const;
+    virtual bool ok( void ) const override;    
+    virtual void stream( TFSPdfStream &stream ) const override;
 };
 
 

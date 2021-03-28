@@ -35,7 +35,7 @@ public:
     TFSPdfFontMap( void );
     
     TFSPdfFontMapNode* addNode( const TFSPdfFont font, const int fontIndex, const std::size_t objectIndex );
-    const TFSPdfFontMapNode* getNode( const TFSPdfFont font );
+    const TFSPdfFontMapNode* getNode( const TFSPdfFont font ) const;
     
     
 };  // class TFSPdfFontMap

@@ -7,7 +7,8 @@
 // Dimensions are in points ( 72 per inch )
 // e.g. 8.5 x 11 = 612 x 792;  A4 = 595 x 842;
 // Document coordinates: x min is left, x max is right. y min is bottom, y max is top.
-// Items are drawn in order: boxes, circles, lines then text.
+// Shapes and lines are drawn in the order that they were set into the document.
+// Text are all drawn after the shapes and lines.
 // ---------------------------------------------------------------------------------
 #ifndef TFSPdfDocument_hpp
 #define TFSPdfDocument_hpp
@@ -43,7 +44,9 @@ private:
     void recordFont( TFSPdfFont font );
 
 public:
-    TFSPdfDocument( long width = 612, long height = 792 );           // Points 72 per inch. e.g. 8.5 x 11 = 612 x 792;  A4 = 595 x 842;
+    // 72 Points per inch. e.g. (8.5 x 11) = (612 x 792);  A4 = (595 x 842);
+    TFSPdfDocument( long width = 612, long height = 792, TFSPdfFont font = TFSPdfFont::DEFAULT );
+    virtual ~TFSPdfDocument( void );
 
     bool ok( void ) const;          // Among other things, an empty document is not ok...
     bool empty( void ) const;
@@ -66,14 +69,17 @@ public:
     bool setLine( double x1, double y1, double x2, double y2 );
     bool setPolyline( const std::vector<std::pair<double,double>> &verticies );
     
+    bool setPolygon( const std::vector<std::pair<double,double>> &verticies );
+    bool setPolygon( const std::vector<std::pair<double,double>> &verticies, double shading );
+
     bool setCircle( double x, double y, double radius );                    // Center (x,y) and radius
     bool setCircle( double x, double y, double radius, double shading );    // Center (x,y) and radius, shading [0.0 to 1.0] with 0.0 == black
 
-    bool setBox( long x,  long y,  long width, long height );
-    bool setBox( long x,  long y,  long width, long height, double shading );    // shading [0.0 to 1.0] with 0.0 = black, 1.0 = white
+    bool setBox( double x,  double y,  double width, double height );
+    bool setBox( double x,  double y,  double width, double height, double shading );    // shading [0.0 to 1.0] with 0.0 = black, 1.0 = white
 
-    bool setText(  long x,  long y, const std::string &text );
-    bool setText(  long x,  long y, const char *text );
+    bool setText(  double x,  double y, const std::string &text );
+    bool setText(  double x,  double y, const char *text );
 };
 
 

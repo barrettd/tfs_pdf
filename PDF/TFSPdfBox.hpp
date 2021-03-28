@@ -7,21 +7,21 @@
 #ifndef TFSPdfBox_hpp
 #define TFSPdfBox_hpp
 
+#include "TFSPdfStreamable.hpp"
+
 namespace tfs {
 
-class TFSPdfBox {
+class TFSPdfBox : public TFSPdfStreamable {
+protected:
+    long   m_width;
+    long   m_height;
 public:
-    long x;
-    long y;
-    long width;
-    long height;
-    double lineWidth;
-    double shading;     // [0.0 to 1.0] with 0.0 = black, 1.0 = white
-    bool hasShading;
-public:
-    TFSPdfBox( double lineWidth, long x, long y, long width, long height, double shading = 0.0, bool hasShading = false );
+    TFSPdfBox( double lineWidth, double x, double y, double width, double height, double shading = 0.0, bool hasShading = false );
+    virtual ~TFSPdfBox( void );
     
-    bool ok( void ) const;
+    virtual bool ok( void ) const override;    
+    virtual void stream( TFSPdfStream &stream ) const override;
+    
 };
 
 
