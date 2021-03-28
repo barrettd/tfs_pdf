@@ -9,7 +9,7 @@
 
 namespace tfs {
 
-static const char VERSION[] = { "1.10" };
+static const char VERSION[] = { "1.12" };
 
 TFSPdfWriter::TFSPdfWriter( const std::string &path ):
 m_fontMap(),
@@ -153,13 +153,11 @@ bool TFSPdfWriter::writePageContents( const std::unique_ptr<TFSPdfPage> &page ) 
     m_stream << streamIndex << " 0 obj\n";              // Object 3, Generation 0
 
     TFSPdfStream stream;
-    for( const std::unique_ptr<TFSPdfStreamable> &object : *page ) {
-        stream << *object;
-    }
-    const std::vector<std::unique_ptr<TFSPdfText>> &texts = page->getTexts();
-    for( const std::unique_ptr<TFSPdfText> &text : texts ) {
-        text->stream( stream, m_fontMap );
-    }
+    const TFSPdfStreamableCollection &objects = page->getObjects();
+    objects.stream( stream );
+    const TFSPdfTextCollection &texts = page->getTexts();
+    texts.stream( stream, m_fontMap );
+
     const std::string payload     = stream.str();
     const std::size_t payloadSize = payload.size();
 

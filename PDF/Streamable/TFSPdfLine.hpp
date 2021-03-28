@@ -15,12 +15,15 @@ namespace tfs {
 
 class TFSPdfLine : public TFSPdfStreamable {
 public:
-    static constexpr double LINE_WIDTH_MIN     = 0.1;   // Arbitrary values
+    static constexpr double LINE_WIDTH_MIN     = 0.1;   // Arbitrary max / min values
     static constexpr double LINE_WIDTH_MAX   = 700.0;
 
 protected:
     std::vector<std::pair<double,double>> m_verticies;
 public:
+    TFSPdfLine( const TFSPdfLine &other );
+    TFSPdfLine( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, double x1, double y1, double x2, double y2 );
+    TFSPdfLine( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, const std::vector<std::pair<double,double>> &verticies );
     TFSPdfLine( double lineWidth, double x1, double y1, double x2, double y2 );
     TFSPdfLine( double lineWidth, const std::vector<std::pair<double,double>> &verticies );
     virtual ~TFSPdfLine( void );

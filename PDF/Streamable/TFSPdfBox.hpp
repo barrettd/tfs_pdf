@@ -1,29 +1,32 @@
 // ---------------------------------------------------------------------------------
-//  TFSPdfCircle.hpp
+//  TFSPdfBox.cpp
 //
-//  Created by Barrett Davis on 3/26/21.
+//  Created by Barrett Davis on 3/22/21.
 //  Copyright (c) 2021 Tree Frog Software, All Rights Reserved.
 // ---------------------------------------------------------------------------------
-#ifndef TFSPdfCircle_hpp
-#define TFSPdfCircle_hpp
+#ifndef TFSPdfBox_hpp
+#define TFSPdfBox_hpp
 
 #include "TFSPdfStreamable.hpp"
 
 namespace tfs {
 
-class TFSPdfCircle : public TFSPdfStreamable {
+class TFSPdfBox : public TFSPdfStreamable {
 protected:
-    double m_radius;
+    long   m_width;
+    long   m_height;
 public:
-    TFSPdfCircle( double lineWidth, double x, double y, double radius, double shading = 0.0, bool hasShading = false );
-    virtual ~TFSPdfCircle( void );
+    TFSPdfBox( const TFSPdfBox &other );
+    TFSPdfBox( double lineWidth, double x, double y, double width, double height, double shading = 0.0, TFSPainting painting = TFSPainting::STROKED );
+    virtual ~TFSPdfBox( void );
     
     virtual bool ok( void ) const override;    
     virtual void stream( TFSPdfStream &stream ) const override;
+    
 };
 
 
 }   // namespace tfs
 
 
-#endif /* TFSPdfCircle_hpp */
+#endif /* TFSPdfBox_hpp */

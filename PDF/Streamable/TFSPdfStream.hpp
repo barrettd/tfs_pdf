@@ -8,7 +8,11 @@
 #define TFSPdfStream_hpp
 
 #include <sstream>
-#include <string>
+
+#include "TFSPdfStreamable.hpp"
+
+namespace tfs {
+
 
 class TFSPdfStream {
 protected:
@@ -26,7 +30,7 @@ public:
 
     void setLineWidth( double width );
     
-    void fillOrStroke( bool hasShading, double shadeValue );
+    void fillOrStroke( TFSPdfStreamable::TFSPainting painting, double shadeValue );
     
     TFSPdfStream& operator<<( char value );
     TFSPdfStream& operator<<( int  value );
@@ -43,6 +47,6 @@ public:
     
 };  // class TFSPdfStream
 
-
+}   // namespace tfs
 
 #endif /* TFSPdfStream_hpp */

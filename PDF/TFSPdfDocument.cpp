@@ -115,6 +115,33 @@ std::size_t TFSPdfDocument::pageCount( void ) const {
     return m_pages.size();
 }
 
+std::size_t TFSPdfDocument::currentPageNumber( void ) const {
+    return m_pages.size() + 1;
+}
+
+void TFSPdfDocument::append( const TFSPdfDocument &other ) {
+    for( TFSPdfFont font : other.m_observedFonts ) {
+        recordFont( font );
+    }
+    for( const std::unique_ptr<TFSPdfPage> &page : other.m_pages ) {
+        if( page && page->ok()) {
+            std::unique_ptr<TFSPdfPage> ptr = std::make_unique<TFSPdfPage>( *page );
+            const std::size_t nextPageNumber = currentPageNumber() + 1;
+            ptr->setPageNumber( nextPageNumber );
+            if( m_currentPage != nullptr && m_currentPage->empty()) {
+                m_pages.pop_back();         // Remove empty page.
+            }
+            m_currentPage = ptr.get();
+            m_pages.push_back( std::move( ptr ));
+        }
+    }
+}
+
+TFSPdfDocument& TFSPdfDocument::operator <<( const TFSPdfDocument &other ) {
+    append( other );
+    return *this;
+}
+
 std::vector<std::unique_ptr<TFSPdfPage>>::const_iterator TFSPdfDocument::begin( void ) const {
     return m_pages.begin();
 }

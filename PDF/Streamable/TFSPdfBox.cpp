@@ -5,11 +5,18 @@
 //  Copyright (c) 2021 Tree Frog Software, All Rights Reserved.
 // ---------------------------------------------------------------------------------
 #include "TFSPdfBox.hpp"
+#include "TFSPdfStream.hpp"
 
 namespace tfs {
 
-TFSPdfBox::TFSPdfBox( double strokeWidth, double x, double y, double width, double height, double shadingValue, bool hasShading ):
-TFSPdfStreamable( x, y, strokeWidth, shadingValue, hasShading ),
+TFSPdfBox::TFSPdfBox( const TFSPdfBox &other ):
+TFSPdfStreamable( other ),
+m_width(  other.m_width ),
+m_height( other.m_height ) {
+}
+
+TFSPdfBox::TFSPdfBox( double strokeWidth, double x, double y, double width, double height, double shadingValue, TFSPainting painting ):
+TFSPdfStreamable( TFSPdfStreamableType::BOX, painting, x, y, strokeWidth, shadingValue ),
 m_width( width ),
 m_height( height ) {
 }
@@ -27,7 +34,7 @@ void TFSPdfBox::stream( TFSPdfStream &stream ) const {
     }
     stream.setLineWidth( m_lineWidth );
     stream << m_x << m_y << m_width << m_height << "re\n";     // x,y w,h Rectangle
-    stream.fillOrStroke( m_hasShading, m_shading );
+    stream.fillOrStroke( m_painting, m_shading );
     return;
 }
 

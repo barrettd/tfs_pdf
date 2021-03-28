@@ -7,21 +7,34 @@
 #ifndef TFSPdfStreamable_hpp
 #define TFSPdfStreamable_hpp
 
-#include "TFSPdfStream.hpp"
+#include "TFSPdfStreamableType.hpp"
 
 namespace tfs {
 
+class TFSPdfStream;             // Forward declaration.
+
 class TFSPdfStreamable {        // Base class for streamable objects.
+public:
+    enum class TFSPainting {
+        STROKED,
+        FILLED,
+        STROKED_AND_FILLED
+    };
+    
 protected:
+    TFSPdfStreamableType m_type;
+    TFSPainting          m_painting;
     double m_x;
     double m_y;
-    double m_lineWidth;
+    double m_lineWidth;         // Max / min line width found in TFSPdfLine.hpp
     double m_shading;           // [0.0 to 1.0] with 0.0 = black, 1.0 = white
-    bool   m_hasShading;
 
 public:
-    TFSPdfStreamable( double x = 0.0, double y = 0.0, double lineWidth = 1.0, double shading = 0.0, bool hasShading = false );
+    TFSPdfStreamable( const TFSPdfStreamable &other );
+    TFSPdfStreamable( TFSPdfStreamableType objType, TFSPainting painting = TFSPainting::STROKED, double x = 0.0, double y = 0.0, double lineWidth = 1.0, double shading = 0.0 );
     virtual ~TFSPdfStreamable( void );
+    
+    TFSPdfStreamableType getType( void ) const;
     
     virtual bool ok( void ) const;
 

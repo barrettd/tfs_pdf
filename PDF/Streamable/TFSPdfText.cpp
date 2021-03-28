@@ -5,15 +5,22 @@
 //  Copyright (c) 2021 Tree Frog Software, All Rights Reserved.
 // ---------------------------------------------------------------------------------
 #include "TFSPdfText.hpp"
+#include "TFSPdfStream.hpp"
 
 namespace tfs {
 
+TFSPdfText::TFSPdfText( const TFSPdfText &other ):
+TFSPdfStreamable( other ),
+m_font(     other.m_font     ),
+m_fontSize( other.m_fontSize ),
+m_text(     other.m_text     ) {
+}
 
 TFSPdfText::TFSPdfText( TFSPdfFont font, std::size_t fontSize, double x, double y, const std::string &text ):
-TFSPdfStreamable( x, y ),
-m_font( font ),
+TFSPdfStreamable( TFSPdfStreamableType::TEXT, TFSPainting::STROKED, x, y ),
+m_font(     font     ),
 m_fontSize( fontSize ),
-m_text( text ) {
+m_text(     text     ) {
 }
 
 TFSPdfText::~TFSPdfText( void ) {
@@ -60,7 +67,7 @@ static void escapeText( std::string &dst, const std::string &src ) {
 void TFSPdfText::stream( TFSPdfStream &stream ) const {
 }
 
-void TFSPdfText::stream( TFSPdfStream &stream, const TFSPdfFontMap &fontMap ) {
+void TFSPdfText::stream( TFSPdfStream &stream, const TFSPdfFontMap &fontMap ) const {
     if( !ok()) {
         return;
     }

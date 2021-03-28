@@ -11,6 +11,8 @@
 #include <iomanip>
 #include "TFSPdfStream.hpp"
 
+namespace tfs {
+
 
 TFSPdfStream::TFSPdfStream( void ):
 m_stream(),
@@ -38,17 +40,21 @@ void TFSPdfStream::restoreGraphicsState( void ) {   // Pop graphics state
     m_stream << "Q\n";
 }
 
-void TFSPdfStream::fillOrStroke( bool hasShading, double shadeValue ) {
-    if( hasShading ) {
-        saveGraphicsState();
-        m_stream << shadeValue << " g f\n";    // Set greyscale color, then fill.
-        restoreGraphicsState();
+void TFSPdfStream::fillOrStroke( TFSPdfStreamable::TFSPainting painting, double shadeValue ) {
+    if( painting ==  TFSPdfStreamable::TFSPainting::STROKED ) {
+        m_stream << "s\n";                  // Stroked
     } else {
-        m_stream << "s\n";    // Stroke
+        saveGraphicsState();
+        m_stream << shadeValue << " g ";    // Set greyscale color
+        if( painting == TFSPdfStreamable::TFSPainting::FILLED ) {
+            m_stream << "f\n";              // Filled
+        } else {
+            m_stream << "B\n";              // Both stroked and filled
+        }
+        restoreGraphicsState();
     }
     return;
 }
-
 
 TFSPdfStream& TFSPdfStream::operator<<( char value ) {
     m_stream << value << " ";
@@ -92,4 +98,4 @@ TFSPdfStream& TFSPdfStream::operator<<( const std::string &value ) {
     return *this;
 }
 
-
+}   // namespace tfs

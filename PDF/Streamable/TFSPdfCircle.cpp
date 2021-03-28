@@ -5,11 +5,17 @@
 //  Copyright (c) 2021 Tree Frog Software, All Rights Reserved.
 // ---------------------------------------------------------------------------------
 #include "TFSPdfCircle.hpp"
+#include "TFSPdfStream.hpp"
 
 namespace tfs {
 
-TFSPdfCircle::TFSPdfCircle( double strokeWidth, double x, double y, double radius, double shadingValue, bool hasShading ):
-TFSPdfStreamable( x, y, strokeWidth, shadingValue, hasShading ),
+TFSPdfCircle::TFSPdfCircle( const TFSPdfCircle &other ):
+TFSPdfStreamable( other ),
+m_radius( other.m_radius ) {
+}
+
+TFSPdfCircle::TFSPdfCircle( double strokeWidth, double x, double y, double radius, double shadingValue, TFSPainting painting ):
+TFSPdfStreamable( TFSPdfStreamableType::CIRCLE, painting, x, y, strokeWidth, shadingValue ),
 m_radius( radius ) {
 }
 
@@ -54,7 +60,7 @@ void TFSPdfCircle::stream( TFSPdfStream &stream ) const {
     stream <<    left.first       <<  (left.second + cr);     // Control point.
     stream <<    (top.first - cr) <<    top.second;           // Control point.
     stream <<     top.first       <<    top.second << "c ";  // End position.
-    stream.fillOrStroke( m_hasShading, m_shading );
+    stream.fillOrStroke( m_painting, m_shading );
     return;
 }
 

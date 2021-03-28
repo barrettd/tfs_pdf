@@ -7,13 +7,8 @@
 #ifndef TFSPdfPage_hpp
 #define TFSPdfPage_hpp
 
-#include <memory>
-#include <vector>
-#include "TFSPdfBox.hpp"
-#include "TFSPdfCircle.hpp"
-#include "TFSPdfLine.hpp"
-#include "TFSPdfPolygon.hpp"
-#include "TFSPdfText.hpp"
+#include "TFSPdfStreamableCollection.hpp"
+#include "TFSPdfTextCollection.hpp"
 
 
 namespace tfs {
@@ -22,28 +17,30 @@ class TFSPdfPage {
 public:
     std::vector<TFSPdfFont> observedFonts;   // Page level observed fonts.
 private:
-    std::vector<std::unique_ptr<TFSPdfStreamable>> m_objects;
-    std::vector<std::unique_ptr<TFSPdfText>>       m_texts;
-    TFSPdfFont      m_currentFont;
-    std::size_t     m_pageNumber;
-    std::size_t     m_objectIndex;
-    std::size_t     m_streamIndex;
+    TFSPdfStreamableCollection  m_objects;
+    TFSPdfTextCollection        m_texts;
+    TFSPdfFont                  m_currentFont;
+    std::size_t                 m_pageNumber;
+    std::size_t                 m_objectIndex;
+    std::size_t                 m_streamIndex;
 
 private:
     void recordFont( TFSPdfFont font );
 
 public:
+    TFSPdfPage( const TFSPdfPage &other );
     TFSPdfPage( TFSPdfFont currentFont, std::size_t pageNumber );
-    
+    TFSPdfPage( TFSPdfPage &other );
+ 
     TFSPdfFont setFont( TFSPdfFont font );
     
     bool empty( void ) const;
+    bool ok( void ) const;
     
-    std::vector<std::unique_ptr<TFSPdfStreamable>>::const_iterator begin( void ) const;
-    std::vector<std::unique_ptr<TFSPdfStreamable>>::const_iterator end(   void ) const;
-
-    const std::vector<std::unique_ptr<TFSPdfText>> &getTexts( void ) const;
+    const TFSPdfStreamableCollection& getObjects( void ) const;
+    const TFSPdfTextCollection&       getTexts( void ) const;
     
+    void        setPageNumber( std::size_t number );
     std::size_t getPageNumber( void ) const;
     
     void        setObjectIndex( std::size_t index );

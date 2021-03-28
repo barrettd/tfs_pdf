@@ -61,8 +61,12 @@ public:
     
     bool newPage( void );
     std::size_t pageCount( void ) const;
+    std::size_t currentPageNumber( void ) const;    // Starts at 1.
     
-    TFSPdfFont  setFont( TFSPdfFont font );     // Returns previous font.
+    void append( const TFSPdfDocument &other );
+    TFSPdfDocument &operator <<( const TFSPdfDocument &other );
+    
+    TFSPdfFont  setFont( TFSPdfFont font );         // Returns previous font.
     TFSPdfFont  setFont( TFSPdfFontFamily fontFamily, bool bold = false, bool italic = false );
     std::size_t setFontSize( std::size_t size );
 

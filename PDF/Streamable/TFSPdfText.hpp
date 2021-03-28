@@ -19,6 +19,7 @@ protected:
     std::string m_text;
     
 public:
+    TFSPdfText( const TFSPdfText &other );
     TFSPdfText( TFSPdfFont font, std::size_t fontSize, double x,  double y, const std::string &text );
     virtual ~TFSPdfText( void );
     
@@ -27,7 +28,7 @@ public:
 
     virtual bool ok( void ) const override;
     virtual void stream( TFSPdfStream &stream ) const override;     // NOP
-    void stream( TFSPdfStream &stream, const TFSPdfFontMap &fontMap );
+    void stream( TFSPdfStream &stream, const TFSPdfFontMap &fontMap ) const;
 };
 
 }   // namespace tfs
