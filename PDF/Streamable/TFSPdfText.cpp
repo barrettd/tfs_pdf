@@ -17,7 +17,7 @@ m_text(     other.m_text     ) {
 }
 
 TFSPdfText::TFSPdfText( TFSPdfFont font, std::size_t fontSize, double x, double y, const std::string &text ):
-TFSPdfStreamable( TFSPdfStreamableType::TEXT, TFSPainting::STROKED, x, y ),
+TFSPdfStreamable( TFSPdfStreamableType::TEXT, TFSPainting::STROKED, DEFAULT_LINE_WIDTH, DEFAULT_SHADING, x, y ),
 m_font(     font     ),
 m_fontSize( fontSize ),
 m_text(     text     ) {

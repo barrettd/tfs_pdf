@@ -14,32 +14,13 @@ TFSPdfStreamable( other ),
 m_verticies( other.m_verticies ) {
 }
 
-TFSPdfLine::TFSPdfLine( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, double x1, double y1, double x2, double y2 ):
-TFSPdfStreamable( objType, painting, 0.0, 0.0, lineWidth ),
-m_verticies() {
-    std::pair<double,double> aa( x1, y1 );
-    std::pair<double,double> bb( x2, y2 );
-    m_verticies.push_back( aa );
-    m_verticies.push_back( bb );
-}
-
-TFSPdfLine::TFSPdfLine( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, const std::vector<std::pair<double,double>> &verticies ):
-TFSPdfStreamable( objType, painting, 0.0, 0.0, lineWidth ),
+TFSPdfLine::TFSPdfLine( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, double shading, const std::vector<std::pair<double,double>> &verticies ):
+TFSPdfStreamable( objType, painting, lineWidth, shading ),
 m_verticies( verticies ) {
 }
 
-
-TFSPdfLine::TFSPdfLine( double lineWidth, double x1, double y1, double x2, double y2 ):
-TFSPdfStreamable( TFSPdfStreamableType::LINE, TFSPainting::STROKED, 0.0, 0.0, lineWidth ),
-m_verticies() {
-    std::pair<double,double> aa( x1, y1 );
-    std::pair<double,double> bb( x2, y2 );
-    m_verticies.push_back( aa );
-    m_verticies.push_back( bb );
-}
-
 TFSPdfLine::TFSPdfLine( double lineWidth, const std::vector<std::pair<double,double>> &verticies ):
-TFSPdfStreamable( TFSPdfStreamableType::LINE, TFSPainting::STROKED, 0.0, 0.0, lineWidth ),
+TFSPdfStreamable( TFSPdfStreamableType::LINE, TFSPainting::STROKED, lineWidth, DEFAULT_SHADING ),
 m_verticies( verticies ) {
 }
 

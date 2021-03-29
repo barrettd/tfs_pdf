@@ -11,7 +11,7 @@ namespace tfs {
 
 TFSPdfStreamableCollection::TFSPdfStreamableCollection( const TFSPdfStreamableCollection &other ):
 m_objects() {
-    for( const std::unique_ptr<TFSPdfStreamable> &obj : m_objects ) {
+    for( const std::unique_ptr<TFSPdfStreamable> &obj : m_objects ) {   // Deep copy
         if( obj && obj->ok()) {
             switch( obj->getType()) {
                 case TFSPdfStreamableType::BOX:      cloneBox(     obj );    break;
@@ -77,19 +77,10 @@ std::vector<std::unique_ptr<TFSPdfStreamable>>::const_iterator TFSPdfStreamableC
 
 void TFSPdfStreamableCollection::stream( TFSPdfStream &stream ) const {
     for( const std::unique_ptr<TFSPdfStreamable> &obj : m_objects ) {
-        if( obj->ok()) {
+        if( obj && obj->ok()) {
             obj->stream( stream );
         }
     }
-}
-
-bool TFSPdfStreamableCollection::setLine( double lineWidth, double x1, double y1, double x2, double y2 ) {
-    std::unique_ptr<TFSPdfLine> line = std::make_unique<TFSPdfLine>( lineWidth, x1, y1, x2, y2 );
-    if( !line->ok()) {
-        return false;
-    }
-    m_objects.push_back( std::move( line ));
-    return true;
 }
 
 bool TFSPdfStreamableCollection::setPolyline( double lineWidth, const std::vector<std::pair<double,double>> &verticies ) {
@@ -101,8 +92,8 @@ bool TFSPdfStreamableCollection::setPolyline( double lineWidth, const std::vecto
     return true;
 }
 
-bool TFSPdfStreamableCollection::setPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies ) {
-    std::unique_ptr<TFSPdfPolygon> polygon = std::make_unique<TFSPdfPolygon>( lineWidth, verticies );
+bool TFSPdfStreamableCollection::setPolygon( TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, const std::vector<std::pair<double,double>> &verticies ) {
+    std::unique_ptr<TFSPdfPolygon> polygon = std::make_unique<TFSPdfPolygon>( painting, lineWidth, shading, verticies );
     if( !polygon->ok()) {
         return false;
     }
@@ -111,17 +102,8 @@ bool TFSPdfStreamableCollection::setPolygon( double lineWidth, const std::vector
 
 }
 
-bool TFSPdfStreamableCollection::setPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies, double shading ) {
-    std::unique_ptr<TFSPdfPolygon> polygon = std::make_unique<TFSPdfPolygon>( lineWidth, verticies, shading, TFSPdfStreamable::TFSPainting::FILLED );
-    if( !polygon->ok()) {
-        return false;
-    }
-    m_objects.push_back( std::move( polygon ));
-    return true;
-}
-
-bool TFSPdfStreamableCollection::setCircle( double lineWidth, double x, double y, double radius ) {
-    std::unique_ptr<TFSPdfCircle> circle = std::make_unique<TFSPdfCircle>( lineWidth, x, y, radius );
+bool TFSPdfStreamableCollection::setCircle( TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, double x, double y, double radius ) {
+    std::unique_ptr<TFSPdfCircle> circle = std::make_unique<TFSPdfCircle>( painting, lineWidth, shading, x, y, radius );
     if( !circle->ok()) {
         return false;
     }
@@ -129,26 +111,8 @@ bool TFSPdfStreamableCollection::setCircle( double lineWidth, double x, double y
     return true;
 }
 
-bool TFSPdfStreamableCollection::setCircle( double lineWidth, double x, double y, double radius, double shading ) {
-    std::unique_ptr<TFSPdfCircle> circle = std::make_unique<TFSPdfCircle>( lineWidth, x, y, radius, shading, TFSPdfStreamable::TFSPainting::FILLED );
-    if( !circle->ok()) {
-        return false;
-    }
-    m_objects.push_back( std::move( circle ));
-    return true;
-}
-
-bool TFSPdfStreamableCollection::setBox( double lineWidth, double x,  double y,  double width, double height ) {
-    std::unique_ptr<TFSPdfBox> box = std::make_unique<TFSPdfBox>( lineWidth, x, y, width, height );
-    if( !box->ok()) {
-        return false;
-    }
-    m_objects.push_back( std::move( box ));
-    return true;
-}
-
-bool TFSPdfStreamableCollection::setBox( double lineWidth, double x,  double y,  double width, double height, double shading ) {
-    std::unique_ptr<TFSPdfBox> box = std::make_unique<TFSPdfBox>( lineWidth, x, y, width, height, shading, TFSPdfStreamable::TFSPainting::FILLED );
+bool TFSPdfStreamableCollection::setBox( TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, double x, double y, double width, double height ) {
+    std::unique_ptr<TFSPdfBox> box = std::make_unique<TFSPdfBox>( painting, lineWidth, shading, x, y, width, height );
     if( !box->ok()) {
         return false;
     }

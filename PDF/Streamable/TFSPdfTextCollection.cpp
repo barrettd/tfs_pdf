@@ -11,7 +11,7 @@ namespace tfs {
 
 TFSPdfTextCollection::TFSPdfTextCollection( const TFSPdfTextCollection &other ):
 m_texts() {
-    for( const std::unique_ptr<TFSPdfText> &text : other.m_texts ) {
+    for( const std::unique_ptr<TFSPdfText> &text : other.m_texts ) {    // Deep copy
         if( text->ok()) {
             m_texts.push_back( std::make_unique<TFSPdfText>( *text ));
         }

@@ -14,10 +14,8 @@ namespace tfs {
 class TFSPdfPolygon : public TFSPdfLine {
 public:
     TFSPdfPolygon( const TFSPdfPolygon &other );
-    TFSPdfPolygon( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, double x1, double y1, double x2, double y2 );
-    TFSPdfPolygon( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, const std::vector<std::pair<double,double>> &verticies );
-    TFSPdfPolygon( double lineWidth, double x1, double y1, double x2, double y2, double shading = 0.0, TFSPainting painting = TFSPainting::STROKED );
-    TFSPdfPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies, double shading = 0.0, TFSPainting painting = TFSPainting::STROKED );
+    TFSPdfPolygon( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, double shading, const std::vector<std::pair<double,double>> &verticies );
+    TFSPdfPolygon( TFSPainting painting, double lineWidth, double shading, const std::vector<std::pair<double,double>> &verticies );
     virtual ~TFSPdfPolygon( void );
     
     virtual void stream( TFSPdfStream &stream ) const override;

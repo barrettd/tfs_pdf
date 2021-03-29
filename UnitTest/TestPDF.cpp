@@ -140,9 +140,8 @@ bool testPDF( const std::string &outDirectory ) {
     document.setBox( 200, 260, 300, 25, 0.90 );         // Fill a box with grey
     document.setBox( 200, 260, 300, 25 );               // Frame the box with black
     
-    document.setCircle( 450.0, 600.0, 20.0 );           // Little circle, above a larger one.
-    document.setCircle( 450.0, 500.0, 100.0, 0.95 );    // Shaded circle.
-    document.setCircle( 450.0, 500.0, 100.0 );          // Framed circle.
+    document.setCircle( 450.0, 600.0, 20.0 );               // Little circle, above a larger one.
+    document.setFramedCircle( 450.0, 500.0, 100.0, 0.95 );  // Shaded and framed
 
     document.setFont( TFSPdfFont::Helvetica );
     document.setFontSize( 12 );

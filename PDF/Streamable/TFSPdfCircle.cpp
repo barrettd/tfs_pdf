@@ -14,8 +14,8 @@ TFSPdfStreamable( other ),
 m_radius( other.m_radius ) {
 }
 
-TFSPdfCircle::TFSPdfCircle( double strokeWidth, double x, double y, double radius, double shadingValue, TFSPainting painting ):
-TFSPdfStreamable( TFSPdfStreamableType::CIRCLE, painting, x, y, strokeWidth, shadingValue ),
+TFSPdfCircle::TFSPdfCircle( TFSPainting painting, double lineWidth, double shading, double x, double y, double radius ):
+TFSPdfStreamable( TFSPdfStreamableType::CIRCLE, painting, lineWidth, shading, x, y ),
 m_radius( radius ) {
 }
 

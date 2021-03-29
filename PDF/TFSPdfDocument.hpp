@@ -73,15 +73,21 @@ public:
     bool setLine( double x1, double y1, double x2, double y2 );
     bool setPolyline( const std::vector<std::pair<double,double>> &verticies );
     
-    bool setPolygon( const std::vector<std::pair<double,double>> &verticies );
-    bool setPolygon( const std::vector<std::pair<double,double>> &verticies, double shading );
+    // Note: hading [0.0 to 1.0] with 0.0 = black, 1.0 = white
+    
+    bool setPolygon( const std::vector<std::pair<double,double>> &verticies );                          // Stroked (framed)
+    bool setPolygon( const std::vector<std::pair<double,double>> &verticies, double shading );          // Filled with shading
+    bool setFramedPolygon( const std::vector<std::pair<double,double>> &verticies, double shading );    // Filled and stroked (framed)
 
-    bool setCircle( double x, double y, double radius );                    // Center (x,y) and radius
-    bool setCircle( double x, double y, double radius, double shading );    // Center (x,y) and radius, shading [0.0 to 1.0] with 0.0 == black
+    // Circle center (x,y) and radius
+    bool setCircle( double x, double y, double radius );                                    // Stroked (framed)
+    bool setCircle( double x, double y, double radius, double shading );                    // Filled with shading
+    bool setFramedCircle( double x, double y, double radius, double shading );              // Filled and stroked (framed)
 
-    bool setBox( double x,  double y,  double width, double height );
-    bool setBox( double x,  double y,  double width, double height, double shading );    // shading [0.0 to 1.0] with 0.0 = black, 1.0 = white
-
+    bool setBox( double x,  double y,  double width, double height );                       // Stroked (framed)
+    bool setBox( double x,  double y,  double width, double height, double shading );       // Filled
+    bool setFramedBox( double x,  double y,  double width, double height, double shading ); // Filled and stroked (framed)
+    
     bool setText(  double x,  double y, const std::string &text );
     bool setText(  double x,  double y, const char *text );
 };

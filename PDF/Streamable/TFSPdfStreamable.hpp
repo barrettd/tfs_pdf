@@ -24,14 +24,14 @@ public:
 protected:
     TFSPdfStreamableType m_type;
     TFSPainting          m_painting;
-    double m_x;
-    double m_y;
-    double m_lineWidth;         // Max / min line width found in TFSPdfLine.hpp
-    double m_shading;           // [0.0 to 1.0] with 0.0 = black, 1.0 = white
+    double               m_lineWidth;
+    double               m_shading;
+    double               m_x;
+    double               m_y;
 
 public:
     TFSPdfStreamable( const TFSPdfStreamable &other );
-    TFSPdfStreamable( TFSPdfStreamableType objType, TFSPainting painting = TFSPainting::STROKED, double x = 0.0, double y = 0.0, double lineWidth = 1.0, double shading = 0.0 );
+    TFSPdfStreamable( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, double shading, double x = 0.0, double y = 0.0 );
     virtual ~TFSPdfStreamable( void );
     
     TFSPdfStreamableType getType( void ) const;
@@ -42,6 +42,9 @@ public:
     
 };  // TFSPdfStreamable
 
+constexpr TFSPdfStreamable::TFSPainting DEFAULT_PAINTING   = TFSPdfStreamable::TFSPainting::STROKED;
+constexpr double                        DEFAULT_LINE_WIDTH = 1.0;
+constexpr double                        DEFAULT_SHADING    = 0.0;
 
 TFSPdfStream& operator<<( TFSPdfStream &stream, const TFSPdfStreamable &streamable );
 

@@ -14,22 +14,12 @@ TFSPdfPolygon::TFSPdfPolygon( const TFSPdfPolygon &other ):
 TFSPdfLine( other ) {
 }
 
-TFSPdfPolygon::TFSPdfPolygon( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, double x1, double y1, double x2, double y2 ):
-TFSPdfLine( objType, painting, lineWidth, x1, y1, x2, y2 ) {
+TFSPdfPolygon::TFSPdfPolygon( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, double shading, const std::vector<std::pair<double,double>> &verticies ):
+TFSPdfLine( objType, painting, lineWidth, shading, verticies ) {
 }
 
-TFSPdfPolygon::TFSPdfPolygon( TFSPdfStreamableType objType, TFSPainting painting, double lineWidth, const std::vector<std::pair<double,double>> &verticies ):
-TFSPdfLine( objType, painting, lineWidth, verticies ) {
-}
-
-TFSPdfPolygon::TFSPdfPolygon( double lineWidth, double x1, double y1, double x2, double y2, double shading, TFSPainting painting ):
-TFSPdfLine( TFSPdfStreamableType::POLYGON, painting, lineWidth, x1, y1, x2, y2 ) {
-    m_shading = shading;
-}
-
-TFSPdfPolygon::TFSPdfPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies, double shading, TFSPainting painting ):
-TFSPdfLine( TFSPdfStreamableType::POLYGON, painting, lineWidth, verticies ) {
-    m_shading = shading;
+TFSPdfPolygon::TFSPdfPolygon( TFSPainting painting, double lineWidth, double shading, const std::vector<std::pair<double,double>> &verticies ):
+TFSPdfLine( TFSPdfStreamableType::POLYGON, painting, lineWidth, shading, verticies ) {
 }
 
 TFSPdfPolygon::~TFSPdfPolygon( void ) {

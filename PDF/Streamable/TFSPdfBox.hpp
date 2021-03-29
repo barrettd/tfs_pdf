@@ -17,13 +17,15 @@ protected:
     long   m_height;
 public:
     TFSPdfBox( const TFSPdfBox &other );
-    TFSPdfBox( double lineWidth, double x, double y, double width, double height, double shading = 0.0, TFSPainting painting = TFSPainting::STROKED );
+    TFSPdfBox( TFSPainting painting, double lineWidth, double shading, double x, double y, double width, double height );
     virtual ~TFSPdfBox( void );
     
     virtual bool ok( void ) const override;    
     virtual void stream( TFSPdfStream &stream ) const override;
     
 };
+
+
 
 
 }   // namespace tfs

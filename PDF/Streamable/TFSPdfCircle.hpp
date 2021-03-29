@@ -16,12 +16,13 @@ protected:
     double m_radius;
 public:
     TFSPdfCircle( const TFSPdfCircle &other );
-    TFSPdfCircle( double lineWidth, double x, double y, double radius, double shading = 0.0, TFSPainting painting = TFSPainting::STROKED );
+    TFSPdfCircle( TFSPainting painting, double lineWidth, double shading, double x, double y, double radius );
     virtual ~TFSPdfCircle( void );
     
     virtual bool ok( void ) const override;    
     virtual void stream( TFSPdfStream &stream ) const override;
 };
+
 
 
 }   // namespace tfs

@@ -126,8 +126,7 @@ void TFSPdfDocument::append( const TFSPdfDocument &other ) {
     for( const std::unique_ptr<TFSPdfPage> &page : other.m_pages ) {
         if( page && page->ok()) {
             std::unique_ptr<TFSPdfPage> ptr = std::make_unique<TFSPdfPage>( *page );
-            const std::size_t nextPageNumber = currentPageNumber() + 1;
-            ptr->setPageNumber( nextPageNumber );
+            ptr->setPageNumber( currentPageNumber() + 1 );
             if( m_currentPage != nullptr && m_currentPage->empty()) {
                 m_pages.pop_back();         // Remove empty page.
             }
@@ -155,35 +154,58 @@ const std::vector<TFSPdfFont>& TFSPdfDocument::getObservedFonts( void ) const {
 }
 
 bool TFSPdfDocument::setLine( double x1, double y1, double x2, double y2 ) {
-    return m_currentPage->setLine( m_lineWidth, x1, y1, x2, y2 );
+    std::pair<double,double> aa( x1, y1 );
+    std::pair<double,double> bb( x2, y2 );
+    std::vector<std::pair<double,double>> verticies;
+    verticies.push_back( aa );
+    verticies.push_back( bb );
+    return m_currentPage->setPolyline( m_lineWidth, verticies );
 }
+
+bool setPolygon( TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, const std::vector<std::pair<double,double>> &verticies );
+bool setCircle(  TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, double x, double y, double radius );
+bool setBox(     TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, double x, double y, double width, double height );
+bool setText( TFSPdfFont font, std::size_t fontSize, double x, double y, const std::string &text );
+
 
 bool TFSPdfDocument::setPolyline( const std::vector<std::pair<double,double>> &verticies ) {
     return m_currentPage->setPolyline( m_lineWidth, verticies );
 }
 
 bool TFSPdfDocument::setPolygon( const std::vector<std::pair<double,double>> &verticies ) {
-    return m_currentPage->setPolygon( m_lineWidth, verticies );
+    return m_currentPage->setPolygon( TFSPdfStreamable::TFSPainting::STROKED, m_lineWidth, DEFAULT_SHADING, verticies );
 }
 
 bool TFSPdfDocument::setPolygon( const std::vector<std::pair<double,double>> &verticies, double shading ) {
-    return m_currentPage->setPolygon( m_lineWidth, verticies, shading );
+    return m_currentPage->setPolygon( TFSPdfStreamable::TFSPainting::FILLED, m_lineWidth, shading, verticies );
+}
+
+bool TFSPdfDocument::setFramedPolygon( const std::vector<std::pair<double,double>> &verticies, double shading ) {
+    return m_currentPage->setPolygon( TFSPdfStreamable::TFSPainting::STROKED_AND_FILLED, m_lineWidth, shading, verticies );
 }
 
 bool TFSPdfDocument::setCircle( double x, double y, double radius ) {    // Center (x,y) and radius
-    return m_currentPage->setCircle( m_lineWidth, x, y, radius );
+    return m_currentPage->setCircle( TFSPdfStreamable::TFSPainting::STROKED, m_lineWidth, DEFAULT_SHADING, x, y, radius );
 }
 
 bool TFSPdfDocument::setCircle( double x, double y, double radius, double shading ) {
-    return m_currentPage->setCircle( m_lineWidth, x, y, radius, shading );
+    return m_currentPage->setCircle( TFSPdfStreamable::TFSPainting::FILLED, m_lineWidth, shading, x, y, radius );
+}
+
+bool TFSPdfDocument::setFramedCircle( double x, double y, double radius, double shading ) {
+    return m_currentPage->setCircle( TFSPdfStreamable::TFSPainting::STROKED_AND_FILLED, m_lineWidth, shading, x, y, radius );
 }
 
 bool TFSPdfDocument::setBox( double x, double y, double width, double height ) {
-    return m_currentPage->setBox( m_lineWidth, x, y, width, height );
+    return m_currentPage->setBox( TFSPdfStreamable::TFSPainting::STROKED, m_lineWidth, DEFAULT_SHADING, x, y, width, height );
 }
 
 bool TFSPdfDocument::setBox( double x, double y, double width, double height, double shading ) {
-    return m_currentPage->setBox( m_lineWidth, x, y, width, height, shading );
+    return m_currentPage->setBox( TFSPdfStreamable::TFSPainting::FILLED, m_lineWidth, shading, x, y, width, height );
+}
+
+bool TFSPdfDocument::setFramedBox( double x, double y, double width, double height, double shading ) {
+    return m_currentPage->setBox( TFSPdfStreamable::TFSPainting::STROKED_AND_FILLED, m_lineWidth, shading, x, y, width, height );
 }
 
 bool TFSPdfDocument::setText( double x, double y, const std::string &text ) {

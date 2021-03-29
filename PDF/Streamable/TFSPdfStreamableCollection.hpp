@@ -40,18 +40,13 @@ public:
     
     void stream( TFSPdfStream &stream ) const;
 
-    bool setLine(     double lineWidth, double x1, double y1, double x2, double y2 );
     bool setPolyline( double lineWidth, const std::vector<std::pair<double,double>> &verticies );
-
-    bool setPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies );
-    bool setPolygon( double lineWidth, const std::vector<std::pair<double,double>> &verticies, double shading );
-
-    bool setCircle( double lineWidth, double x, double y, double radius );
-    bool setCircle( double lineWidth, double x, double y, double radius, double shading );
-
-    bool setBox( double lineWidth, double x,  double y,  double width, double height );
-    bool setBox( double lineWidth, double x,  double y,  double width, double height, double shading );    // shading [0.0 to 1.0] with 0.0 = black, 1.0 = white
-
+    
+    // Note: shading [0.0 to 1.0] with 0.0 = black, 1.0 = white
+    bool setPolygon( TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, const std::vector<std::pair<double,double>> &verticies );
+    bool setCircle(  TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, double x, double y, double radius );
+    bool setBox(     TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, double x, double y, double width, double height );
+    
     bool setText( TFSPdfFont font, std::size_t fontSize, double x, double y, const std::string &text );
 };
 

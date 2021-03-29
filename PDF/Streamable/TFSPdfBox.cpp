@@ -15,9 +15,9 @@ m_width(  other.m_width ),
 m_height( other.m_height ) {
 }
 
-TFSPdfBox::TFSPdfBox( double strokeWidth, double x, double y, double width, double height, double shadingValue, TFSPainting painting ):
-TFSPdfStreamable( TFSPdfStreamableType::BOX, painting, x, y, strokeWidth, shadingValue ),
-m_width( width ),
+TFSPdfBox::TFSPdfBox( TFSPainting painting, double lineWidth, double shading, double x, double y, double width, double height ):
+TFSPdfStreamable( TFSPdfStreamableType::BOX, painting, lineWidth, shading, x, y ),
+m_width(  width ),
 m_height( height ) {
 }
 
