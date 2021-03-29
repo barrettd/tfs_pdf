@@ -35,7 +35,7 @@ std::size_t TFSPdfText::size( void ) const {
 }
 
 bool TFSPdfText::ok( void ) const {
-    return TFSPdfStreamable::ok() && !m_text.empty();
+    return TFSPdfStreamable::ok() && m_fontSize > 0 && !m_text.empty();
 }
 
 static void escapeText( std::string &dst, const std::string &src ) {

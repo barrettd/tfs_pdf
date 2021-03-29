@@ -25,8 +25,9 @@ public:
     
     bool empty( void ) const;
     std::size_t size( void ) const;
-
+    
     virtual bool ok( void ) const override;
+
     virtual void stream( TFSPdfStream &stream ) const override;     // NOP
     void stream( TFSPdfStream &stream, const TFSPdfFontMap &fontMap ) const;
 };

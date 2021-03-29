@@ -162,12 +162,6 @@ bool TFSPdfDocument::setLine( double x1, double y1, double x2, double y2 ) {
     return m_currentPage->setPolyline( m_lineWidth, verticies );
 }
 
-bool setPolygon( TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, const std::vector<std::pair<double,double>> &verticies );
-bool setCircle(  TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, double x, double y, double radius );
-bool setBox(     TFSPdfStreamable::TFSPainting painting, double lineWidth, double shading, double x, double y, double width, double height );
-bool setText( TFSPdfFont font, std::size_t fontSize, double x, double y, const std::string &text );
-
-
 bool TFSPdfDocument::setPolyline( const std::vector<std::pair<double,double>> &verticies ) {
     return m_currentPage->setPolyline( m_lineWidth, verticies );
 }
